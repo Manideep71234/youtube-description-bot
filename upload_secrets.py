@@ -69,6 +69,8 @@ def main():
         "EMAIL_RECIPIENT": env_vars.get("EMAIL_RECIPIENT", ""),
         "WHATSAPP_PHONE_NUMBER": env_vars.get("WHATSAPP_PHONE_NUMBER", ""),
         "WHATSAPP_API_KEY": env_vars.get("WHATSAPP_API_KEY", ""),
+        "TELEGRAM_BOT_TOKEN": env_vars.get("TELEGRAM_BOT_TOKEN", ""),
+        "TELEGRAM_CHAT_ID": env_vars.get("TELEGRAM_CHAT_ID", ""),
         "YOUTUBE_TOKEN_PICKLE_B64": token_b64,
         "CLIENT_SECRET_JSON": client_secret
     }

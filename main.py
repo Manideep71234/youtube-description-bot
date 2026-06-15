@@ -6,6 +6,7 @@ from youtube_client import get_authenticated_service, get_recent_videos, update_
 from ai_generator import generate_metadata
 from email_notifier import send_email_notification
 from whatsapp_notifier import send_whatsapp_message
+from telegram_notifier import send_telegram_message
 from comment_manager import get_unreplied_comments, generate_reply, post_reply
 
 # Load environment variables
@@ -96,6 +97,7 @@ def main():
                         body = f"The YouTube Description Bot has successfully optimized and updated the video: '{new_metadata.get('title')}'.\n\nVideo ID: {video_id}\nLink: https://www.youtube.com/watch?v={video_id}\n\nShorts Ideas:\n{shorts_text}"
                         send_email_notification(f"TAGS ADDED: {new_metadata.get('title')}", body)
                         send_whatsapp_message(f"✅ Video Optimized: {new_metadata.get('title')}\n\nShorts Ideas:\n{shorts_text}")
+                        send_telegram_message(f"✅ <b>Video Optimized:</b> {new_metadata.get('title')}\n\n<b>Shorts Ideas:</b>\n{shorts_text}")
                 else:
                     print(f"DRY RUN: Skipping YouTube update for {video_id}. Marking as processed.")
                     # Even in dry run, we mark it as processed to avoid infinite loops during testing
@@ -113,6 +115,7 @@ def main():
                             body = f"Replied to {comment['author']} on video '{video['title']}'.\n\nComment: {comment['text']}\nReply: {reply_text}"
                             send_email_notification(f"Replied on Comment: {video['title']}", body)
                             send_whatsapp_message(f"💬 Replied to {comment['author']} on {video['title']}")
+                            send_telegram_message(f"💬 <b>Replied to {comment['author']}</b> on {video['title']}")
                     elif reply_text and DRY_RUN:
                         print(f"DRY RUN: Would have replied to {comment['author']}: {reply_text}")
 

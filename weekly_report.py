@@ -3,6 +3,7 @@ from youtube_client import get_authenticated_service
 import google.generativeai as genai
 from email_notifier import send_email_notification
 from whatsapp_notifier import send_whatsapp_message
+from telegram_notifier import send_telegram_message
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -100,9 +101,10 @@ def main():
     print("Sending notifications...")
     send_email_notification("📈 Your Weekly YouTube Performance Report", report_text)
     
-    # Send a short WhatsApp summary
+    # Send a short WhatsApp and Telegram summary
     wa_summary = f"📈 Weekly YouTube Report is ready!\n\nTop Video: {top_videos[0]['title']} ({top_videos[0]['views']} views).\n\nCheck your email for the full analysis of topics and languages!"
     send_whatsapp_message(wa_summary)
+    send_telegram_message(f"📈 <b>Weekly YouTube Report is ready!</b>\n\nTop Video: {top_videos[0]['title']} ({top_videos[0]['views']} views).\n\n<i>Check your email for the full analysis of topics and languages!</i>")
     
     print("Done!")
 
