@@ -4,6 +4,9 @@ import time
 from dotenv import load_dotenv
 from youtube_client import get_authenticated_service, get_recent_videos, update_video_metadata
 from ai_generator import generate_metadata
+from email_notifier import send_email_notification
+from whatsapp_notifier import send_whatsapp_message
+from comment_manager import get_unreplied_comments, generate_reply, post_reply
 
 # Load environment variables
 load_dotenv()
@@ -88,13 +91,31 @@ def main():
                     
                     if success:
                         save_processed_video(video_id)
-                        from email_notifier import send_email_notification
-                        send_email_notification(video_id, new_metadata.get('title'))
+                        
+                        shorts_text = "\n".join(new_metadata.get('shorts_ideas', []))
+                        body = f"The YouTube Description Bot has successfully optimized and updated the video: '{new_metadata.get('title')}'.\n\nVideo ID: {video_id}\nLink: https://www.youtube.com/watch?v={video_id}\n\nShorts Ideas:\n{shorts_text}"
+                        send_email_notification(f"TAGS ADDED: {new_metadata.get('title')}", body)
+                        send_whatsapp_message(f"✅ Video Optimized: {new_metadata.get('title')}\n\nShorts Ideas:\n{shorts_text}")
                 else:
                     print(f"DRY RUN: Skipping YouTube update for {video_id}. Marking as processed.")
                     # Even in dry run, we mark it as processed to avoid infinite loops during testing
                     save_processed_video(video_id)
-            
+            # 4. Check for comments on recent videos
+            print("Checking for unreplied comments...")
+            for video in recent_videos:
+                video_id = video['video_id']
+                unreplied_comments = get_unreplied_comments(youtube, video_id)
+                for comment in unreplied_comments:
+                    print(f"Generating reply for comment by {comment['author']}...")
+                    reply_text = generate_reply(comment['text'], video['title'])
+                    if reply_text and not DRY_RUN:
+                        if post_reply(youtube, comment['id'], reply_text):
+                            body = f"Replied to {comment['author']} on video '{video['title']}'.\n\nComment: {comment['text']}\nReply: {reply_text}"
+                            send_email_notification(f"Replied on Comment: {video['title']}", body)
+                            send_whatsapp_message(f"💬 Replied to {comment['author']} on {video['title']}")
+                    elif reply_text and DRY_RUN:
+                        print(f"DRY RUN: Would have replied to {comment['author']}: {reply_text}")
+
             if os.getenv("GITHUB_ACTIONS"):
                 print("Running in GitHub Actions mode, completing single run and exiting.")
                 break

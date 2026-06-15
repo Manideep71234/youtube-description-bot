@@ -34,6 +34,8 @@ jobs:
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+          WHATSAPP_PHONE_NUMBER: ${{ secrets.WHATSAPP_PHONE_NUMBER }}
+          WHATSAPP_API_KEY: ${{ secrets.WHATSAPP_API_KEY }}
           DRY_RUN: 'false'
           GITHUB_ACTIONS: 'true'
         run: python main.py

@@ -2,7 +2,9 @@ import os
 import base64
 import json
 import requests
+# pyrefly: ignore [missing-import]
 from dotenv import dotenv_values
+# pyrefly: ignore [missing-import]
 from nacl import encoding, public
 
 # Replace with your details
@@ -65,6 +67,8 @@ def main():
         "EMAIL_SENDER": env_vars.get("EMAIL_SENDER", ""),
         "EMAIL_PASSWORD": env_vars.get("EMAIL_PASSWORD", ""),
         "EMAIL_RECIPIENT": env_vars.get("EMAIL_RECIPIENT", ""),
+        "WHATSAPP_PHONE_NUMBER": env_vars.get("WHATSAPP_PHONE_NUMBER", ""),
+        "WHATSAPP_API_KEY": env_vars.get("WHATSAPP_API_KEY", ""),
         "YOUTUBE_TOKEN_PICKLE_B64": token_b64,
         "CLIENT_SECRET_JSON": client_secret
     }

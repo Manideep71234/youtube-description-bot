@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 
-def send_email_notification(video_id, title):
+def send_email_notification(subject, body):
     sender = os.getenv("EMAIL_SENDER")
     password = os.getenv("EMAIL_PASSWORD")
     recipient = os.getenv("EMAIL_RECIPIENT")
@@ -11,9 +11,6 @@ def send_email_notification(video_id, title):
     if not sender or not password or not recipient:
         print("Email configuration is missing. Cannot send notification.")
         return False
-
-    subject = f"YouTube Bot Processed: {title}"
-    body = f"The YouTube Description Bot has successfully optimized and updated the video: '{title}'.\n\nVideo ID: {video_id}\nLink: https://www.youtube.com/watch?v={video_id}"
 
     msg = MIMEMultipart()
     msg['From'] = sender
