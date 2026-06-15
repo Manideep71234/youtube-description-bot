@@ -95,11 +95,17 @@ def main():
                     # Even in dry run, we mark it as processed to avoid infinite loops during testing
                     save_processed_video(video_id)
             
+            if os.getenv("GITHUB_ACTIONS"):
+                print("Running in GitHub Actions mode, completing single run and exiting.")
+                break
+                
             print(f"Sleeping for {POLL_INTERVAL} seconds...")
             time.sleep(POLL_INTERVAL)
             
         except Exception as e:
             print(f"An error occurred during polling: {e}")
+            if os.getenv("GITHUB_ACTIONS"):
+                raise e
             print("Retrying in 60 seconds...")
             time.sleep(60)
 
